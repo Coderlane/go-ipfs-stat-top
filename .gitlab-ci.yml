@@ -14,7 +14,7 @@ stages:
 
 before_script:
   - mkdir -p /go/src/gitlab.com/coderlane /go/src/_/builds
-  - cp -r $CI_PROJECT_DIR /go/src/gitlab.com/coderlane/go-go-ipfs-stat-top
+  - cp -r $CI_PROJECT_DIR /go/src/gitlab.com/coderlane/go-ipfs-stat-top
   - ln -s /go/src/gitlab.com/coderlane /go/src/_/builds/coderlane
   - make dep
 
