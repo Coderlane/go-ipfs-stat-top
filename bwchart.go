@@ -2,8 +2,10 @@ package main
 
 import (
 	tui "github.com/gizak/termui"
+	"math"
 )
 
+// BWLineChart a LineChart for tracking total bandwith usage over time.
 type BWLineChart struct {
 	LineChart *tui.LineChart
 }
@@ -11,6 +13,8 @@ type BWLineChart struct {
 var txLabel = "TX"
 var rxLabel = "RX"
 
+// NewBWLineChart Create a new Bandwith Line Chart to track total bandwith
+// usage over time.
 func NewBWLineChart() *BWLineChart {
 	bwc := &BWLineChart{
 		LineChart: tui.NewLineChart(),
@@ -35,9 +39,10 @@ func NewBWLineChart() *BWLineChart {
 	return bwc
 }
 
+// Resize Resize the line chart to match the new terminal size
 func (bwc *BWLineChart) Resize(rs tui.Resize) {
 	// Let the table take up 1/3 of the terminal
-	bwc.LineChart.Height = (rs.Height / 3)
+	bwc.LineChart.Height = int(math.Floor(float64(rs.Height) / 3))
 	if bwc.LineChart.Height < 8 {
 		// At a minimum, 8 rows
 		bwc.LineChart.Height = 8

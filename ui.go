@@ -4,6 +4,7 @@ import (
 	tui "github.com/gizak/termui"
 )
 
+// UserInterface The full user-facing interface.
 type UserInterface struct {
 	Elements    []UserElement
 	BWLineChart *BWLineChart
@@ -11,10 +12,12 @@ type UserInterface struct {
 	BWTable     *BWTable
 }
 
+// UserElement a single element in the UserInterface.
 type UserElement interface {
 	Resize(rs tui.Resize)
 }
 
+// NewUserInterface Create a new user interface
 func NewUserInterface() *UserInterface {
 
 	bwLineChart := NewBWLineChart()
@@ -31,6 +34,7 @@ func NewUserInterface() *UserInterface {
 	return ui
 }
 
+// init Initialize the UI for the first time
 func (ui *UserInterface) init() {
 	// Setup Keyboard Handlers
 	tui.Handle("q", ui.quit)
@@ -70,10 +74,13 @@ func (ui *UserInterface) init() {
 	tui.Render(tui.Body)
 }
 
+// loop Call in a loop to re-render
 func (ui *UserInterface) loop() {
+	tui.Clear()
 	tui.Render(tui.Body)
 }
 
+// resize Resize the UI to match the event
 func (ui *UserInterface) resize(e tui.Event) {
 	rs := e.Payload.(tui.Resize)
 
@@ -91,10 +98,12 @@ func (ui *UserInterface) resize(e tui.Event) {
 	tui.Render(tui.Body)
 }
 
+// quit Quit out of the userinterface
 func (ui *UserInterface) quit(tui.Event) {
 	tui.StopLoop()
 }
 
+// Run Run the main loop
 func (ui *UserInterface) Run() {
 	tui.Loop()
 }
