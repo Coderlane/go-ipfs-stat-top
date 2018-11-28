@@ -1,11 +1,19 @@
 package main
 
 import (
+	"context"
+	"time"
+
 	tui "github.com/gizak/termui"
+	ipfs "github.com/ipfs/go-ipfs-api"
 )
 
 // UserInterface The full user-facing interface.
 type UserInterface struct {
+	Context context.Context
+	Shell   *ipfs.Shell
+	schan   chan bool
+
 	Elements    []UserElement
 	BWLineChart *BWLineChart
 	RepoPar     *RepoPar
@@ -15,20 +23,31 @@ type UserInterface struct {
 // UserElement a single element in the UserInterface.
 type UserElement interface {
 	Resize(rs tui.Resize)
+	Refresh(ctx context.Context)
 }
 
 // NewUserInterface Create a new user interface
-func NewUserInterface() *UserInterface {
+func NewUserInterface(shell *ipfs.Shell) *UserInterface {
+	// Get the initial size
+	rs := tui.Resize{
+		Height: tui.TermHeight(),
+		Width:  tui.TermWidth(),
+	}
 
-	bwLineChart := NewBWLineChart()
+	// Setup the widgets
+	bwLineChart := NewBWLineChart(shell, rs)
 	repoPar := NewRepoPar()
 	bwTable := NewBWTable()
 
 	ui := &UserInterface{
+		Context: context.Background(),
+		Shell:   shell,
+		schan:   make(chan bool, 1),
+
+		Elements:    []UserElement{bwLineChart, repoPar, bwTable},
 		BWLineChart: bwLineChart,
 		RepoPar:     repoPar,
 		BWTable:     bwTable,
-		Elements:    []UserElement{bwLineChart, repoPar, bwTable},
 	}
 	ui.init()
 	return ui
@@ -68,16 +87,34 @@ func (ui *UserInterface) init() {
 	for _, elem := range ui.Elements {
 		elem.Resize(rs)
 	}
+	tui.Body.Align()
 
 	// First render
-	tui.Body.Align()
+	ui.refresh()
+}
+
+func (ui *UserInterface) refresh() {
+	for _, elem := range ui.Elements {
+		elem.Refresh(ui.Context)
+	}
+
+	tui.Clear()
 	tui.Render(tui.Body)
 }
 
 // loop Call in a loop to re-render
 func (ui *UserInterface) loop() {
-	tui.Clear()
-	tui.Render(tui.Body)
+
+	ticker := time.NewTicker(time.Second)
+
+	for {
+		select {
+		case <-ticker.C:
+			ui.refresh()
+		case <-ui.schan:
+			return
+		}
+	}
 }
 
 // resize Resize the UI to match the event
@@ -100,10 +137,13 @@ func (ui *UserInterface) resize(e tui.Event) {
 
 // quit Quit out of the userinterface
 func (ui *UserInterface) quit(tui.Event) {
+	ui.schan <- true
 	tui.StopLoop()
 }
 
 // Run Run the main loop
 func (ui *UserInterface) Run() {
+
+	go ui.loop()
 	tui.Loop()
 }

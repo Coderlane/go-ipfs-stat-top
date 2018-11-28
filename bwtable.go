@@ -1,8 +1,10 @@
 package main
 
 import (
-	tui "github.com/gizak/termui"
+	"context"
 	"math"
+
+	tui "github.com/gizak/termui"
 )
 
 // BWTable A table to track bandwith usage by protocol
@@ -10,7 +12,8 @@ type BWTable struct {
 	Table *tui.Table
 }
 
-var bwtHeader = []string{"Protocol", "Total In", "Total Out", "Rate In", "Rate Out"}
+var bwtHeader = []string{"Protocol",
+	"Total In", "Total Out", "Rate In", "Rate Out"}
 
 // NewBWTable Create a new table to track bandwith usage by protocol
 func NewBWTable() *BWTable {
@@ -37,4 +40,9 @@ func (bwt *BWTable) Resize(rs tui.Resize) {
 		// At a minimum, 8 rows
 		bwt.Table.Height = 8
 	}
+}
+
+// Refresh Collect the latest per-protocol bandwith data
+func (bwt *BWTable) Refresh(ctx context.Context) {
+	// TODO
 }
