@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"testing"
+
+	ipfs "github.com/ipfs/go-ipfs-api"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -30,4 +33,20 @@ func TestRepoPar(t *testing.T) {
 	expected = "Path: test\nVersion: test\nSize: 102 kB\n" +
 		"Max Size: 10 GB\nTotal Objects: 16\n"
 	assert.Equal(t, rp.Par.Text, expected, "")
+}
+
+// Test integration with IPFS
+func TestRepoParIntegration(t *testing.T) {
+	shell := ipfs.NewLocalShell()
+	if shell == nil || !shell.IsUp() {
+		t.Skipf("Could not connect to IPFS Daemon.")
+		return
+	}
+
+	rp := NewRepoPar(shell)
+
+	// See if we successfully refresh
+	rp.Refresh(context.Background())
+
+	assert.Regexp(t, ".*Path:.*", rp.Par.Text)
 }

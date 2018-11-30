@@ -56,9 +56,9 @@ func NewUserInterface(shell *ipfs.Shell) *UserInterface {
 // init Initialize the UI for the first time
 func (ui *UserInterface) init() {
 	// Setup Keyboard Handlers
-	tui.Handle("q", ui.quit)
-	tui.Handle("C-q", ui.quit)
-	tui.Handle("C-c", ui.quit)
+	tui.Handle("q", ui.Quit)
+	tui.Handle("C-q", ui.Quit)
+	tui.Handle("C-c", ui.Quit)
 
 	// Setup Event Handlers
 	tui.Handle("<Resize>", ui.resize)
@@ -88,9 +88,6 @@ func (ui *UserInterface) init() {
 		elem.Resize(rs)
 	}
 	tui.Body.Align()
-
-	// First render
-	ui.refresh()
 }
 
 func (ui *UserInterface) refresh() {
@@ -107,6 +104,7 @@ func (ui *UserInterface) loop() {
 
 	ticker := time.NewTicker(time.Second)
 
+	ui.refresh()
 	for {
 		select {
 		case <-ticker.C:
@@ -135,8 +133,8 @@ func (ui *UserInterface) resize(e tui.Event) {
 	tui.Render(tui.Body)
 }
 
-// quit Quit out of the userinterface
-func (ui *UserInterface) quit(tui.Event) {
+// Quit Quit out of the userinterface
+func (ui *UserInterface) Quit(tui.Event) {
 	ui.schan <- true
 	tui.StopLoop()
 }

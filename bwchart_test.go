@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"testing"
 
 	tui "github.com/gizak/termui"
+	ipfs "github.com/ipfs/go-ipfs-api"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -53,4 +55,26 @@ func TestBWLineChart(t *testing.T) {
 		"TX": []float64{8, 9, 10, 11, 12, 13, 14, 15},
 		"RX": []float64{9, 10, 11, 12, 13, 14, 15, 16}})
 	assert.Equal(t, bwc.LineChart.Data, expected, "")
+}
+
+// Test integration with IPFS
+func TestBWLineChartIntegration(t *testing.T) {
+	shell := ipfs.NewLocalShell()
+	if shell == nil || !shell.IsUp() {
+		t.Skipf("Could not connect to IPFS Daemon.")
+		return
+	}
+
+	rs := tui.Resize{
+		Width:  4,
+		Height: 80,
+	}
+
+	bwc := NewBWLineChart(shell, rs)
+
+	// See if we successfully refresh
+	bwc.Refresh(context.Background())
+
+	assert.Len(t, bwc.LineChart.Data["RX"], 1)
+	assert.Len(t, bwc.LineChart.Data["TX"], 1)
 }
