@@ -19,12 +19,7 @@ test: ## Run unittests
 coverage: ## Generate global code coverage report
 	go test ./... -v -coverprofile .testCoverage.txt
 
-dep: ## Get the dependencies
-	@go get -v -d ./...
-	@go get -u github.com/stretchr/testify/assert
-	@go get -u github.com/golang/lint/golint
-
-build: dep ## Build the binary file
+build: ## Build the binary file
 	@go build -i -v $(PKG)
 
 clean: ## Remove previous build

@@ -53,6 +53,17 @@
   version = "v1.1.1"
 
 [[projects]]
+  branch = "travis-1.9"
+  digest = "1:e8f5d9c09a7209c740e769713376abda388c41b777ba8e9ed52767e21acf379f"
+  name = "github.com/golang/lint"
+  packages = [
+    ".",
+    "golint",
+  ]
+  pruneopts = "UT"
+  revision = "883fe33ffc4344bad1ecd881f61afd5ec5d80e0a"
+
+[[projects]]
   branch = "master"
   digest = "1:e3ddd1f59d3c84917c99ecb1c3420aa6899f6df7495ba9414c13732b2e9568dd"
   name = "github.com/gxed/hashland"
@@ -261,12 +272,26 @@
   pruneopts = "UT"
   revision = "4ed8d59d0b35e1e29334a206d1b3f38b1e5dfb31"
 
+[[projects]]
+  branch = "master"
+  digest = "1:807f223c7a54832f75fb6d83e0ca20b0d68c82ee8d6fdaa6bde6a004eee183bf"
+  name = "golang.org/x/tools"
+  packages = [
+    "go/ast/astutil",
+    "go/gcexportdata",
+    "go/internal/gcimporter",
+    "go/types/typeutil",
+  ]
+  pruneopts = "UT"
+  revision = "e015b91f2629f3276e199cb5a549c8ad9dcdc275"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/dustin/go-humanize",
     "github.com/gizak/termui",
+    "github.com/golang/lint/golint",
     "github.com/ipfs/go-ipfs-api",
     "github.com/libp2p/go-libp2p-metrics",
     "github.com/stretchr/testify/assert",

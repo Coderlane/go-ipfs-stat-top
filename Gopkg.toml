@@ -48,3 +48,7 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  branch = "travis-1.9"
+  name = "github.com/golang/lint"
