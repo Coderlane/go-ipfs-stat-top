@@ -21,6 +21,7 @@ coverage: ## Generate global code coverage report
 
 dep: ## Get the dependencies
 	@go get -v -d ./...
+	@go get -u github.com/stretchr/testify/assert
 	@go get -u github.com/golang/lint/golint
 
 build: dep ## Build the binary file
