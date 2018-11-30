@@ -37,7 +37,7 @@ func NewUserInterface(shell *ipfs.Shell) *UserInterface {
 	// Setup the widgets
 	bwLineChart := NewBWLineChart(shell, rs)
 	repoPar := NewRepoPar(shell)
-	bwTable := NewBWTable()
+	bwTable := NewBWTable(shell, rs)
 
 	ui := &UserInterface{
 		Context: context.Background(),
