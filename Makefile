@@ -17,7 +17,7 @@ test: ## Run unittests
 	@go test -short ${PKG_LIST}
 
 coverage: ## Generate global code coverage report
-	go test ./... -v -coverprofile .testCoverage.txt
+	go test -coverprofile .testCoverage.txt ${PKG_LIST}
 
 build: ## Build the binary file
 	@go build -i -v $(PKG)
