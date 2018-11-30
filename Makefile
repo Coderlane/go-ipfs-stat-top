@@ -16,8 +16,11 @@ lint: ## Lint the files
 test: ## Run unittests
 	@go test -short ${PKG_LIST}
 
+dep:
+	@go get -u golang.org/x/lint/golint
+
 coverage: ## Generate global code coverage report
-	go test -coverprofile .testCoverage.txt ${PKG_LIST}
+	@go test -coverprofile .testCoverage.txt ${PKG_LIST}
 
 build: ## Build the binary file
 	@go build -i -v $(PKG)
